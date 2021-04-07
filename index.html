@@ -7,11 +7,13 @@
   <title>Books DB Upload </title>
   <link rel="stylesheet" type="text/css" href="deps/opt/bootstrap.css" />
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Roboto:wght@300;400&family=Source+Sans+Pro:wght@300;400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Roboto:wght@300;400&family=Source+Sans+Pro:wght@300;400&display=swap"
+    rel="stylesheet">
 
   <style>
-    *{
-      
+    * {
+
       font-family: 'Roboto', sans-serif;
       font-weight: 300 !important;
     }
@@ -21,8 +23,8 @@
       font-weight: 300;
     }
 
-    select{ 
-        padding: 5px;
+    select {
+      padding: 5px;
     }
   </style>
 </head>
@@ -30,10 +32,18 @@
 <body>
 
   <div class="container">
-    <div class="text-center">
-      <h2 class="inter bold">QuikRead Books Upload 🌱</h2>
+    <!-- Manual upload -->
+    <div class="row">
+      <div class="text-center">
+        <h2 class="inter bold">QuikRead Books Data Upload 🌱</h2>
+      </div>
+      <input class="form-control" type="number" placeholder="Enter ISBN Number" id="google_books_isbn"
+        style="margin-top:10px; margin-bottom:10px">
+      <button class="btn btn-primary" style="margin-left: 38%;" onclick="fetchGoogleAPI()">Automate with Google Books
+        API</button>
+      <form id="form_manual"></form>
     </div>
-    <form></form>
+
   </div>
   <div id="res" class="alert"></div>
   <script type="text/javascript" src="deps/jquery.min.js"></script>
@@ -41,10 +51,10 @@
   <script type="text/javascript" src="deps/opt/jsv.js"></script>
   <script type="text/javascript" src="lib/jsonform.js"></script>
   <script type="text/javascript">
-    $('form').jsonForm({
+    $('#form_manual').jsonForm({
       schema: {
         isbn_number: {
-          type: 'string',
+          type: 'number',
           title: 'ISBN Number (*required)',
           required: true
         },
@@ -117,6 +127,35 @@
         }
       }
     });
+
+    function fetchGoogleAPI() {
+      let isbn_number = document.getElementById("google_books_isbn").value;
+      let data;
+      console.log(isbn_number)
+      $.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn_number}`, function (data, status) {
+        console.log("data",data)
+        // Fill ISBN number
+        document.getElementById("jsonform-1-elt-isbn_number").value = isbn_number;
+
+        // Fill Book title
+        let title = data.items[0].volumeInfo.title
+        document.getElementById("jsonform-1-elt-book_title").value = title;
+
+        // Fill Author Name
+        let author = data.items[0].volumeInfo.authors[0]
+        document.getElementById("jsonform-1-elt-author").value = author;
+
+        // Small Discription
+        let discription = data.items[0].volumeInfo.description
+        document.getElementById("jsonform-1-elt-small_description").value = discription;
+
+        // Image
+        let image = data.items[0].volumeInfo.imageLinks.thumbnail
+        document.getElementById("jsonform-1-elt-imageURL").value = image;
+      });
+      
+
+    }
   </script>
 </body>
 
