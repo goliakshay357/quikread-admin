@@ -91,7 +91,7 @@
             enum: ['Adventure', 'Business', 'Comic', 'Crime', 'Docufiction', 'Epistolary', 'Erotic', 'Fiction',
               'Fantasy', 'Historical', 'Horror', 'Magic', 'realism', 'Mystery', 'Paranoid', 'Philosophical',
               'Political', 'Romance', 'Saga', 'Satire', 'Science', 'Speculative', 'Superhero', 'Thriller',
-              'Urban', 'Western'
+              'Urban', 'Western', 'Personal', 'finance', 'entrepreneurship', 'business', 'investing', 'economics'
             ]
           }
         },
@@ -128,49 +128,74 @@
         if (errors) {
           $('#res').html('<p>Oops! Got an error while uploading!😞 Please try again. </p>');
         } else {
-          console.log(values);
           let body = values;
           body.book_category = values.book_category;
           body.youtube_links = values.youtube_links;
           // -----------------------Making the POST REQ ------------------------
-          $.post(`${BASE_URL}/books/book-entry`, values, function (data, status) {
-            $('#res').html('Data Uploaded via POST!🌻');
+          $.post(`${BASE_URL}/books/book-entry`, values, function (data) {
+            // $('#res').html('Data Uploaded via POST!🌻');
+            if (!data.success) {
+              Swal.fire({
+                title: 'Data Already Exists!',
+                icon: 'error',
+                confirmButtonText: 'Done'
+              })
+            } else {
+              Swal.fire({
+                title: 'Data Uploaded!🌻',
+                icon: 'success',
+                confirmButtonText: 'Done'
+              })
+            }
           })
           $('#res').html('Data Uploaded!');
-          Swal.fire({
-            title: 'Data Uploaded!🌻',
-            icon: 'success',
-            confirmButtonText: 'Done'
-          })
         }
       }
     });
 
     function fetchGoogleAPI() {
       let isbn_number = document.getElementById("google_books_isbn").value;
-      let data;
-      console.log(isbn_number)
-      $.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn_number}`, function (data, status) {
-        console.log("data", data)
-        // Fill ISBN number
-        document.getElementById("jsonform-1-elt-isbn_number").value = isbn_number;
 
-        // Fill Book title
-        let title = data.items[0].volumeInfo.title
-        document.getElementById("jsonform-1-elt-book_title").value = title;
+      // Checking ISBN
+      // http://ec2-13-233-192-106.ap-south-1.compute.amazonaws.com:3000/api/v1/books/check-isbn/1234567890
+      // Making the ReQ
+      $.get(`${BASE_URL}/books/check-isbn/${isbn_number}`, function (data_status) {
+        console.log(data_status,"Data Exists");
+        if (data_status.success) {
+          
+          Swal.fire({
+            title: 'Data Already Exists!',
+            icon: 'error',
+            confirmButtonText: 'Done'
+          })
+          return
+        } else {
+          console.log("Went to else");
+          let data;
+          $.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn_number}`, function (data, status) {
+            // console.log("data", data)
+            // Fill ISBN number
+            document.getElementById("jsonform-1-elt-isbn").value = isbn_number;
 
-        // Fill Author Name
-        let author = data.items[0].volumeInfo.authors[0]
-        document.getElementById("jsonform-1-elt-author").value = author;
+            // Fill Book title
+            let title = data.items[0].volumeInfo.title
+            document.getElementById("jsonform-1-elt-book_title").value = title;
 
-        // Small Discription
-        let discription = data.items[0].volumeInfo.description
-        document.getElementById("jsonform-1-elt-small_description").value = discription;
+            // Fill Author Name
+            let author = data.items[0].volumeInfo.authors[0]
+            document.getElementById("jsonform-1-elt-author_name").value = author;
 
-        // Image
-        let image = data.items[0].volumeInfo.imageLinks.thumbnail
-        document.getElementById("jsonform-1-elt-imageURL").value = image;
-      });
+            // Small Discription
+            let discription = data.items[0].volumeInfo.description
+            document.getElementById("jsonform-1-elt-small_discription").value = discription;
+
+            // Image
+            let image = data.items[0].volumeInfo.imageLinks.thumbnail
+            document.getElementById("jsonform-1-elt-image_URL").value = image;
+          });
+        }
+      })
+
 
 
     }
