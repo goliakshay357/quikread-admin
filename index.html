@@ -50,10 +50,13 @@
   <script type="text/javascript" src="deps/underscore.js"></script>
   <script type="text/javascript" src="deps/opt/jsv.js"></script>
   <script type="text/javascript" src="lib/jsonform.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script type="text/javascript">
+    const BASE_URL = "http://ec2-13-233-192-106.ap-south-1.compute.amazonaws.com:3000/api/v1";
+    // const BASE_URL = "http://localhost:3000/api/v1"
     $('#form_manual').jsonForm({
       schema: {
-        isbn_number: {
+        isbn: {
           type: 'number',
           title: 'ISBN Number (*required)',
           required: true
@@ -63,22 +66,22 @@
           title: 'Book Title (*required)',
           required: true
         },
-        author: {
+        author_name: {
           type: 'string',
           title: 'Author Name (*required)',
           required: true
         },
-        small_description: {
+        small_discription: {
           type: 'string',
           title: 'Small Description (*required)',
           required: true
         },
-        imageURL: {
+        image_URL: {
           type: 'string',
           title: 'Image URL (*required)',
           required: true
         },
-        category: {
+        book_category: {
           type: 'array',
           title: 'Book category',
           items: {
@@ -92,7 +95,7 @@
             ]
           }
         },
-        youtubeURL: {
+        youtube_links: {
           type: 'array',
           title: 'Youtube Links (*required)',
           items: {
@@ -101,7 +104,7 @@
             required: true
           }
         },
-        podcastURL: {
+        podcast_mp3: {
           type: 'array',
           title: 'Podcast MP3 URLS',
           items: {
@@ -109,7 +112,12 @@
             title: 'Enter MP3 URL',
           }
         },
-        download_url: {
+        amazon_purchase: {
+          type: 'string',
+          title: 'Purchase link',
+          required: true
+        },
+        download_links: {
           type: 'string',
           title: 'Book download link',
           required: true
@@ -118,12 +126,22 @@
       },
       onSubmit: function (errors, values) {
         if (errors) {
-          $('#res').html('<p>I beg your pardon?</p>');
+          $('#res').html('<p>Oops! Got an error while uploading!😞 Please try again. </p>');
         } else {
           console.log(values);
-          $('#res').html('<p>Hello ' + values.name + '.' +
-            (values.age ? '<br/>You are ' + values.age + '.' : '') +
-            '</p>');
+          let body = values;
+          body.book_category = values.book_category;
+          body.youtube_links = values.youtube_links;
+          // -----------------------Making the POST REQ ------------------------
+          $.post(`${BASE_URL}/books/book-entry`, values, function (data, status) {
+            $('#res').html('Data Uploaded via POST!🌻');
+          })
+          $('#res').html('Data Uploaded!');
+          Swal.fire({
+            title: 'Data Uploaded!🌻',
+            icon: 'success',
+            confirmButtonText: 'Done'
+          })
         }
       }
     });
@@ -133,7 +151,7 @@
       let data;
       console.log(isbn_number)
       $.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn_number}`, function (data, status) {
-        console.log("data",data)
+        console.log("data", data)
         // Fill ISBN number
         document.getElementById("jsonform-1-elt-isbn_number").value = isbn_number;
 
@@ -153,7 +171,7 @@
         let image = data.items[0].volumeInfo.imageLinks.thumbnail
         document.getElementById("jsonform-1-elt-imageURL").value = image;
       });
-      
+
 
     }
   </script>
