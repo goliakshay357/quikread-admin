@@ -52,7 +52,7 @@
   <script type="text/javascript" src="lib/jsonform.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script type="text/javascript">
-    const BASE_URL = "https://mission360.ddns.net/";
+    const BASE_URL = "https://mission360.ddns.net";
     // const BASE_URL = "http://localhost:3000/api/v1"
     $('#form_manual').jsonForm({
       schema: {
@@ -146,6 +146,9 @@
                 icon: 'success',
                 confirmButtonText: 'Done'
               })
+            
+            // Empty all input fields
+            $(':input').val('');
             }
           })
           $('#res').html('Data Uploaded!');
