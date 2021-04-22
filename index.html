@@ -122,6 +122,14 @@
           title: 'Book download link',
           required: true
         },
+        book_quote: {
+          type: 'array',
+          title: 'Book Quotes',
+          items: {
+            type: 'string',
+            title: 'Enter Quote',
+          }
+        }
 
       },
       onSubmit: function (errors, values) {
@@ -148,7 +156,7 @@
               })
             
             // Empty all input fields
-            $(':input').val('');
+            $('.form-control').val('');
             }
           })
           $('#res').html('Data Uploaded!');
