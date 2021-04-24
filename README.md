@@ -37,7 +37,7 @@ Quikread Analytics Panel
             enum: ['Adventure', 'Business', 'Comic', 'Crime', 'Docufiction', 'Epistolary', 'Erotic', 'Fiction',
               'Fantasy', 'Historical', 'Horror', 'Magic', 'realism', 'Mystery', 'Paranoid', 'Philosophical',
               'Political', 'Romance', 'Saga', 'Satire', 'Science', 'Speculative', 'Superhero', 'Thriller',
-              'Urban', 'Western'
+              'Urban', 'Western', 'Personal', 'finance', 'entrepreneurship', 'business', 'investing', 'economics','Science fiction','Classic'
             ]
           }
         },

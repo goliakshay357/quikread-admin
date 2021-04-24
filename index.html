@@ -39,8 +39,7 @@
       </div>
       <input class="form-control" type="number" placeholder="Enter ISBN Number" id="google_books_isbn"
         style="margin-top:10px; margin-bottom:10px">
-      <button class="btn btn-primary" style="margin-left: 38%;" onclick="fetchGoogleAPI()">Automate with Google Books
-        API</button>
+      <button class="btn btn-primary" style="margin-left: 38%;" onclick="fetchGoogleAPI()">Check and fill</button>
       <form id="form_manual"></form>
     </div>
 
@@ -91,7 +90,10 @@
             enum: ['Adventure', 'Business', 'Comic', 'Crime', 'Docufiction', 'Epistolary', 'Erotic', 'Fiction',
               'Fantasy', 'Historical', 'Horror', 'Magic', 'realism', 'Mystery', 'Paranoid', 'Philosophical',
               'Political', 'Romance', 'Saga', 'Satire', 'Science', 'Speculative', 'Superhero', 'Thriller',
-              'Urban', 'Western', 'Personal', 'finance', 'entrepreneurship', 'business', 'investing', 'economics'
+              'Urban', 'Western', 'Personal', 'finance', 'entrepreneurship', 'business', 'investing', 'economics','Science fiction','Classic','Comedy',
+              'Childrens-literature','Epic','Action','Tragedy','Suspense','Domestic Fiction','Legal','Novel','Bildungsroman','Dystopian','Philosophical',
+               'Drama','Contemporary Fiction','Graphic Novel','Magic Realism','Young Adult','AutoBiography','Self Help','Humor','Guide','Mythology',
+                   'Spiritual'
             ]
           }
         },
@@ -120,7 +122,7 @@
         download_links: {
           type: 'string',
           title: 'Book download link',
-          required: true
+   
         },
         book_quote: {
           type: 'array',
