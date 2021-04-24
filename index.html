@@ -87,14 +87,60 @@
             type: 'string',
             title: 'Choose Category (*required)',
             required: true,
-            enum: ['Adventure', 'Business', 'Comic', 'Crime', 'Docufiction', 'Epistolary', 'Erotic', 'Fiction',
-              'Fantasy', 'Historical', 'Horror', 'Magic', 'realism', 'Mystery', 'Paranoid', 'Philosophical',
-              'Political', 'Romance', 'Saga', 'Satire', 'Science', 'Speculative', 'Superhero', 'Thriller',
-              'Urban', 'Western', 'Personal', 'finance', 'entrepreneurship', 'business', 'investing', 'economics','Science fiction','Classic','Comedy',
-              'Childrens-literature','Epic','Action','Tragedy','Suspense','Domestic Fiction','Legal','Novel','Bildungsroman','Dystopian','Philosophical',
-               'Drama','Contemporary Fiction','Graphic Novel','Magic Realism','Young Adult','AutoBiography','Self Help','Humor','Guide','Mythology',
-                   'Spiritual'
-            ]
+            enum: 
+            ['Adventure', 
+              'Business', 
+              'Comic', 
+              'Crime', 
+              'Docufiction', 
+              'Epistolary', 
+              'Erotic', 
+              'Fiction',
+              'Fantasy', 
+              'Historical', 
+              'Horror', 
+              'Magic', 
+              'realism', 
+              'Mystery', 
+              'Paranoid', 
+              'Philosophical',
+              'Political', 
+              'Romance', 
+              'Saga', 
+              'Satire', 
+              'Science', 
+              'Speculative', 
+              'Superhero', 
+              'Thriller',
+              'Urban', 
+              'Western', 
+              'Personal', 
+              'finance', 
+              'entrepreneurship', 
+              'business', 
+              'investing', 
+              'economics',
+              'science-fiction', 
+              'Classic', 
+              'Childrens-literature', 
+              'Epic', 
+              'Action', 
+              'Tragedy', 
+              'Suspense', 
+              'Legal',
+              'Novel', 
+              'Bildungsroman', 
+              'Dystopian', 
+              'Drama', 
+              'graphic-novel', 
+              'magic-realism', 
+              'young-adult', 
+              'autoBiography',
+              'humor', 
+              'Guide', 
+              'Mythology',
+              'Spiritual',
+            ],
           }
         },
         youtube_links: {
@@ -122,7 +168,7 @@
         download_links: {
           type: 'string',
           title: 'Book download link',
-   
+
         },
         book_quote: {
           type: 'array',
@@ -135,8 +181,8 @@
 
       },
       onSubmit: function (errors, values) {
-        console.log(values);
         if (errors) {
+          console.log(errors);
           $('#res').html('<p>Oops! Got an error while uploading!😞 Please try again. </p>');
         } else {
           let body = values;
@@ -146,20 +192,22 @@
           $.post(`${BASE_URL}/books/book-entry`, values, function (data) {
             // $('#res').html('Data Uploaded via POST!🌻');
             if (!data.success) {
+              console.log("Data exits in book-entry- error while submiting");
               Swal.fire({
                 title: 'Data Already Exists!',
                 icon: 'error',
                 confirmButtonText: 'Done'
               })
             } else {
+              console.log("Data Uploading successfully");
               Swal.fire({
                 title: 'Data Uploaded!🌻',
                 icon: 'success',
                 confirmButtonText: 'Done'
               })
-            
-            // Empty all input fields
-            $('.form-control').val('');
+
+              // Empty all input fields
+              $('.form-control').val('');
             }
           })
           $('#res').html('Data Uploaded!');
@@ -174,9 +222,9 @@
       // http://ec2-13-233-192-106.ap-south-1.compute.amazonaws.com:3000/api/v1/books/check-isbn/1234567890
       // Making the ReQ
       $.get(`${BASE_URL}/books/check-isbn/${isbn_number}`, function (data_status) {
-        console.log(data_status,"Data Exists");
+
         if (data_status.success) {
-          
+          console.log(data_status, "Data Exists");
           Swal.fire({
             title: 'Data Already Exists!',
             icon: 'error',
@@ -184,7 +232,7 @@
           })
           return
         } else {
-          console.log("Went to else");
+          console.log("Data Does not Exist");
           let data;
           $.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn_number}`, function (data, status) {
             // console.log("data", data)
